@@ -1,6 +1,6 @@
 {
     "name" : "detective",
-    "description" : "Find all calls to require() no matter how crazily nested using a proper walk of the AST.",
+    "description" : "Find all calls to require() no matter how crazily nested using a proper walk of the AST",
     "version" : "0.0.0",
     "repository" : {
         "type" : "git",
