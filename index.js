@@ -23,7 +23,7 @@ exports.find = function (src) {
             }
         }
         
-        var isDotRequire = node.name === 'dot'
+        var isDotRequire = (node.name === 'dot' || node.name === 'call')
             && node.value[0][0] === 'call'
             && node.value[0][1][0] === 'name'
             && node.value[0][1][1] === 'require'
