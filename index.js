@@ -22,6 +22,23 @@ exports.find = function (src) {
                 modules.expressions.push(burrito.deparse(expr));
             }
         }
+        
+        var isDotRequire = node.name === 'dot'
+            && node.value[0][0] === 'call'
+            && node.value[0][1][0] === 'name'
+            && node.value[0][1][1] === 'require'
+        ;
+        
+        if (isDotRequire) {
+            var expr = node.value[0][2][0];
+            if (expr[0].name === 'string') {
+                modules.strings.push(expr[1]);
+            }
+            else {
+                modules.expressions.push(burrito.deparse(expr));
+            }
+        }
     });
+    
     return modules;
 };
