@@ -6,8 +6,8 @@ var exports = module.exports = function (src) {
 
 exports.find = function (src) {
     var modules = { strings : [], expressions : [] };
-
-    if (src.indexOf('require(') == -1) return modules;
+    
+    if (src.toString().indexOf('require') == -1) return modules;
     
     burrito(src, function (node) {
         var isRequire = node.name === 'call'
