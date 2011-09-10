@@ -1,7 +1,7 @@
 {
     "name" : "detective",
     "description" : "Find all calls to require() no matter how crazily nested using a proper walk of the AST",
-    "version" : "0.0.2",
+    "version" : "0.0.3",
     "repository" : {
         "type" : "git",
         "url" : "git://github.com/substack/node-detective.git"
