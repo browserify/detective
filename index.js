@@ -1,4 +1,5 @@
 var burrito = require('burrito');
+var word = 'require';
 
 var exports = module.exports = function (src) {
     return exports.find(src).strings;
@@ -7,12 +8,12 @@ var exports = module.exports = function (src) {
 exports.find = function (src) {
     var modules = { strings : [], expressions : [] };
     
-    if (src.toString().indexOf('require') == -1) return modules;
+    if (src.toString().indexOf(word) == -1) return modules;
     
     burrito(src, function (node) {
         var isRequire = node.name === 'call'
             && node.value[0][0] === 'name'
-            && node.value[0][1] === 'require'
+            && node.value[0][1] === word
         ;
         if (isRequire) {
             var expr = node.value[1][0];
@@ -28,7 +29,7 @@ exports.find = function (src) {
         var isDotRequire = (node.name === 'dot' || node.name === 'call')
             && node.value[0][0] === 'call'
             && node.value[0][1][0] === 'name'
-            && node.value[0][1][1] === 'require'
+            && node.value[0][1][1] === word
         ;
         
         if (isDotRequire) {
@@ -45,7 +46,7 @@ exports.find = function (src) {
             && node.value[0][0] === 'dot'
             && node.value[0][1][0] === 'call'
             && node.value[0][1][1][0] === 'name'
-            && node.value[0][1][1][1] === 'require'
+            && node.value[0][1][1][1] === word
         ;
         if (isDotCallRequire) {
             var expr = node.value[0][1][2][0];
@@ -59,4 +60,8 @@ exports.find = function (src) {
     });
     
     return modules;
+};
+
+exports.set = function (value) {
+    word = value;  
 };
