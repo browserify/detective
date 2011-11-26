@@ -1,11 +1,13 @@
 var burrito = require('burrito');
-var word = 'require';
 
-var exports = module.exports = function (src) {
-    return exports.find(src).strings;
+var exports = module.exports = function (src, opts) {
+    return exports.find(src, opts).strings;
 };
 
-exports.find = function (src) {
+exports.find = function (src, opts) {
+    if (!opts) opts = {};
+    var word = opts.word === undefined ? 'require' : opts.word;
+    
     var modules = { strings : [], expressions : [] };
     
     if (src.toString().indexOf(word) == -1) return modules;
@@ -60,8 +62,4 @@ exports.find = function (src) {
     });
     
     return modules;
-};
-
-exports.set = function (value) {
-    word = value;  
 };
