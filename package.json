@@ -19,13 +19,13 @@
         "test" : "test"
     },
     "scripts" : {
-        "test" : "expresso"
+        "test" : "tap test/*.js"
     },
     "dependencies" : {
         "uglify-js" : "~1.2.5"
     },
     "devDependencies" : {
-        "expresso" : "0.7.x"
+        "tap" : "~0.2.3"
     },
     "engines" : {
         "node" : ">=0.4.0"
