@@ -1,16 +1,16 @@
 var uglify = require('uglify-js');
 
-var traverse = function (node, cb) {
+var traverse = function (node, cb, parent, grandparent) {
     // Call cb on all good AST nodes.
     if (Array.isArray(node) && node[0]
     && typeof node[0] === 'object' && node[0].name) {
-        cb({ name : node[0].name, value : node.slice(1) });
+        cb({ name : node[0].name, value : node.slice(1) , grandparent: grandparent});
     }
     
     // Traverse down the tree on arrays and objects.
     if (Array.isArray(node)
     || Object.prototype.toString.call(node) === "[object Object]") {
-        for (var key in node) traverse(node[key], cb);
+        for (var key in node) traverse(node[key], cb, node, parent);
     }
 };
 
@@ -36,50 +36,18 @@ exports.find = function (src, opts) {
     if (src.toString().indexOf(word) == -1) return modules;
     
     walk(src, function (node) {
-        var isRequire = node.name === 'call'
-            && node.value[0][0] === 'name'
-            && node.value[0][1] === word
+        var gp = node.grandparent;
+        var isRequire = Array.isArray(gp)
+            && gp[0] 
+            && (gp[0] === 'call' || gp[0].name === 'call')
+            && gp[1][0] === 'name'
+            && gp[1][1] === word
         ;
-        if (isRequire) {
-            var expr = node.value[1][0];
-            
-            if (expr[0].name === 'string') {
-                modules.strings.push(expr[1]);
-            }
-            else {
-                modules.expressions.push(deparse(expr));
-            }
-        }
-        
-        var isDotRequire = (node.name === 'dot' || node.name === 'call')
-            && node.value[0][0] === 'call'
-            && node.value[0][1][0] === 'name'
-            && node.value[0][1][1] === word
-        ;
-        
-        if (isDotRequire) {
-            var expr = node.value[0][2][0];
-            if (expr[0].name === 'string') {
-                modules.strings.push(expr[1]);
-            }
-            else {
-                modules.expressions.push(deparse(expr));
-            }
-        }
-        
-        var isDotCallRequire = node.name === 'call'
-            && node.value[0][0] === 'dot'
-            && node.value[0][1][0] === 'call'
-            && node.value[0][1][1][0] === 'name'
-            && node.value[0][1][1][1] === word
-        ;
-        if (isDotCallRequire) {
-            var expr = node.value[0][1][2][0];
-            if (expr[0].name === 'string') {
-                modules.strings.push(expr[1]);
-            }
-            else {
-                modules.expressions.push(deparse(expr));
+        if(isRequire) {
+            if(node.name === 'string') {
+                modules.strings.push(node.value[0]);
+            } else {
+                modules.expressions.push(deparse(gp[2][0]));
             }
         }
     });
