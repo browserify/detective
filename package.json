@@ -1,7 +1,7 @@
 {
     "name" : "detective",
     "description" : "Find all calls to require() no matter how crazily nested using a proper walk of the AST",
-    "version" : "0.1.1",
+    "version" : "0.2.0",
     "repository" : {
         "type" : "git",
         "url" : "git://github.com/substack/node-detective.git"
@@ -22,7 +22,7 @@
         "test" : "tap test/*.js"
     },
     "dependencies" : {
-        "uglify-js" : "~1.2.5"
+        "esprima" : "~0.9.9"
     },
     "devDependencies" : {
         "tap" : "~0.2.3"
@@ -35,5 +35,9 @@
         "name" : "James Halliday",
         "email" : "mail@substack.net",
         "url" : "http://substack.net"
-    }
+    },
+    "contributors": [ {
+        "name": "Matjaž Lipuš",
+        "email": "matjazl@gmail.com"
+    } ]
 }
