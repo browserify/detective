@@ -1,29 +1,6 @@
-var uglify = require('uglify-js');
+var parse = require('esprima').parse;
 
-var traverse = function (node, cb, parent, grandparent) {
-    // Call cb on all good AST nodes.
-    if (Array.isArray(node) && node[0]
-    && typeof node[0] === 'object' && node[0].name) {
-        cb({ name : node[0].name, value : node.slice(1) , grandparent: grandparent});
-    }
-    
-    // Traverse down the tree on arrays and objects.
-    if (Array.isArray(node)
-    || Object.prototype.toString.call(node) === "[object Object]") {
-        for (var key in node) traverse(node[key], cb, node, parent);
-    }
-};
-
-var walk = function (src, cb) {
-    var ast = uglify.parser.parse(src.toString(), false, true);
-    traverse(ast, cb);    
-};
-
-var deparse = function (ast) {
-    return uglify.uglify.gen_code(ast);
-};
-
-var exports = module.exports = function (src, opts) {
+exports = module.exports = function (src, opts) {
     return exports.find(src, opts).strings;
 };
 
@@ -33,24 +10,64 @@ exports.find = function (src, opts) {
     
     var modules = { strings : [], expressions : [] };
     
-    if (src.toString().indexOf(word) == -1) return modules;
+    src = '' + src;
+    if (src.indexOf(word) == -1) return modules;
     
-    walk(src, function (node) {
-        var gp = node.grandparent;
-        var isRequire = Array.isArray(gp)
-            && gp[0] 
-            && (gp[0] === 'call' || gp[0].name === 'call')
-            && gp[1][0] === 'name'
-            && gp[1][1] === word
-        ;
-        if(isRequire) {
-            if(node.name === 'string') {
-                modules.strings.push(node.value[0]);
-            } else {
-                modules.expressions.push(deparse(gp[2][0]));
+    var ast = parse(src, {
+        range: true
+    });
+
+    var chunks = src.split('');
+
+    var node2String = function(node) {
+        if (node.range) {
+            return chunks.slice(node.range[0], node.range[1] + 1).join('');
+        } else {
+            return '';
+        }
+    };
+
+    var processAttr = function(node) {
+        switch (node.type) {
+            case 'Literal':
+                return node.value;
+            case 'BinaryExpression':
+                return processAttr(node.left) + processAttr(node.right);
+            default:
+                throw new Error('Invalid expression ' + node.type + ': ' + node2String(node));
+        }
+    };
+
+    var fn = function(node) {
+        if (node.type === 'CallExpression' && node.callee.name === word && node.callee.type === 'Identifier') {
+            var args = node['arguments'];
+            for (var i = 0, len = args.length; i < len; i++) {
+                var a = args[i];
+                try {
+                    modules.strings.push(processAttr(a));
+                } catch (e) {
+                    modules.expressions.push(node2String(a));
+                }
             }
         }
-    });
-    
+    };
+
+    var walk = function(node) {
+        Object.keys(node).forEach(function(key) {
+            var child = node[key];
+            if (Array.isArray(child)) {
+                child.forEach(function(c) {
+                    if (c && typeof c === 'object' && c.type) {
+                        walk(c, node);
+                    }
+                });
+            } else if (child && typeof child === 'object' && child.type) {
+                walk(child, node);
+            }
+        });
+        fn(node);
+    };
+    walk(ast);
+
     return modules;
 };
