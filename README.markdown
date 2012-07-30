@@ -4,6 +4,8 @@ detective
 Find all calls to require() no matter how crazily nested using a proper walk of
 the AST.
 
+[![build status](https://secure.travis-ci.org/substack/node-detective.png)](http://travis-ci.org/substack/node-detective)
+
 example
 =======
 
