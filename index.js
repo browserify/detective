@@ -16,11 +16,6 @@ var traverse = function (node, cb) {
 };
 
 var walk = function (src, cb) {
-    var ast = esprima.parse(src);
-    traverse(ast, cb);
-};
-
-var walkSlow = function (src, cb) {
     var ast = esprima.parse(src, { range : true });
     traverse(ast, cb);
 };
@@ -35,17 +30,18 @@ exports.find = function (src, opts) {
     if (typeof src !== 'string') src = String(src);
     
     function isRequire (node) {
-        return node.type === 'CallExpression'
-            && node.callee.type === 'Identifier'
-            && node.callee.name === word
+        var c = node.callee;
+        return c
+            && node.type === 'CallExpression'
+            && c.type === 'Identifier'
+            && c.name === word
+            && src.slice(c.range[0], c.range[1] + 1) === word
         ;
     }
     
     var modules = { strings : [], expressions : [] };
     
     if (src.indexOf(word) == -1) return modules;
-    
-    var slowPass = false;
     
     walk(src, function (node) {
         if (!isRequire(node)) return;
@@ -54,21 +50,11 @@ exports.find = function (src, opts) {
             modules.strings.push(node.arguments[0].value);
         }
         else {
-            slowPass = true;
+            var r = node.arguments[0].range;
+            var s = src.slice(r[0], r[1] + 1);
+            modules.expressions.push(s);
         }
     });
-    
-    if (slowPass) {
-        walkSlow(src, function (node) {
-            if (!isRequire(node)) return;
-            if (!node.arguments.length
-            || node.arguments[0].type !== 'Literal') {
-                var r = node.arguments[0].range;
-                var s = src.slice(r[0], r[1] + 1);
-                modules.expressions.push(s);
-            }
-        });
-    }
     
     return modules;
 };
