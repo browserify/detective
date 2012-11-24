@@ -35,7 +35,7 @@ exports.find = function (src, opts) {
             && node.type === 'CallExpression'
             && c.type === 'Identifier'
             && c.name === word
-            && src.slice(c.range[0], c.range[1] + 1) === word
+            && src.slice(c.range[0], c.range[1]) === word
         ;
     }
     
@@ -51,7 +51,7 @@ exports.find = function (src, opts) {
         }
         else {
             var r = node.arguments[0].range;
-            var s = src.slice(r[0], r[1] + 1);
+            var s = src.slice(r[0], r[1]);
             modules.expressions.push(s);
         }
     });
