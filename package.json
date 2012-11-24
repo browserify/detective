@@ -22,7 +22,8 @@
         "test" : "tap test/*.js"
     },
     "dependencies" : {
-        "esprima" : "1.0.2"
+        "esprima" : "1.0.2",
+        "escodegen": "0.0.15"
     },
     "devDependencies" : {
         "tap" : "~0.2.6"

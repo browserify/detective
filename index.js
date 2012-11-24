@@ -1,4 +1,5 @@
 var esprima = require('esprima');
+var escodegen = require('escodegen');
 
 var traverse = function (node, cb) {
     if (Array.isArray(node)) {
@@ -16,7 +17,7 @@ var traverse = function (node, cb) {
 };
 
 var walk = function (src, cb) {
-    var ast = esprima.parse(src, { range : true });
+    var ast = esprima.parse(src);
     traverse(ast, cb);
 };
 
@@ -35,7 +36,6 @@ exports.find = function (src, opts) {
             && node.type === 'CallExpression'
             && c.type === 'Identifier'
             && c.name === word
-            && src.slice(c.range[0], c.range[1]) === word
         ;
     }
     
@@ -50,9 +50,7 @@ exports.find = function (src, opts) {
             modules.strings.push(node.arguments[0].value);
         }
         else {
-            var r = node.arguments[0].range;
-            var s = src.slice(r[0], r[1]);
-            modules.expressions.push(s);
+            modules.expressions.push(escodegen.generate(node.arguments[0]));
         }
     });
     
