@@ -1,4 +1,4 @@
-var detective = require('detective');
+var detective = require('../');
 var fs = require('fs');
 
 var src = fs.readFileSync(__dirname + '/strings_src.js');
