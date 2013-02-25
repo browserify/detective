@@ -31,6 +31,7 @@ exports.find = function (src, opts) {
     if (!opts) opts = {};
     var word = opts.word === undefined ? 'require' : opts.word;
     if (typeof src !== 'string') src = String(src);
+    src = src.replace(/^#![^\n]*\n/, '');
     
     function isRequire (node) {
         var c = node.callee;
