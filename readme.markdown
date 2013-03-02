@@ -1,56 +1,53 @@
-detective
-=========
+# detective
 
-Find all calls to require() no matter how crazily nested using a proper walk of
-the AST.
+find all calls to `require()` by walking the AST
 
 [![build status](https://secure.travis-ci.org/substack/node-detective.png)](http://travis-ci.org/substack/node-detective)
 
-example
-=======
+# example
 
-strings
--------
+## strings
 
 strings_src.js:
 
-````javascript
+``` js
 var a = require('a');
 var b = require('b');
 var c = require('c');
-````
+```
 
 strings.js:
 
-````javascript
+``` js
 var detective = require('detective');
 var fs = require('fs');
 
 var src = fs.readFileSync(__dirname + '/strings_src.js');
 var requires = detective(src);
 console.dir(requires);
-````
+```
 
 output:
 
-    $ node examples/strings.js
-    [ 'a', 'b', 'c' ]
+```
+$ node examples/strings.js
+[ 'a', 'b', 'c' ]
+```
 
-methods
-=======
+# methods
 
+``` js
 var detective = require('detective');
+```
 
-detective(src, opts)
---------------------
+## detective(src, opts)
 
-Give some source body `src`, return an array of all the require()s with string
-arguments.
+Give some source body `src`, return an array of all the `require()` calls with
+string arguments.
 
 The options parameter `opts` is passed along to `detective.find()`.
 
-detective.find(src, opts)
--------------------------
+## detective.find(src, opts)
 
 Give some source body `src`, return an object with "strings" and "expressions"
 arrays for each of the require() calls.
@@ -60,7 +57,14 @@ The "expressions" array will contain the stringified expressions.
 Optionally you can specify a different function besides `"require"` to analyze
 with `opts.word`.
 
-installation
-============
+# install
 
-    npm install detective
+With [npm](https://npmjs.org) do:
+
+```
+npm install detective
+```
+
+# license
+
+MIT
