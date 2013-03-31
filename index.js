@@ -44,6 +44,7 @@ exports.find = function (src, opts) {
     }
     
     var modules = { strings : [], expressions : [] };
+    if (opts.nodes) modules.nodes = [];
     
     if (src.indexOf(word) == -1) return modules;
     
@@ -56,6 +57,7 @@ exports.find = function (src, opts) {
         else {
             modules.expressions.push(escodegen.generate(node.arguments[0]));
         }
+        if (opts.nodes) modules.nodes.push(node);
     });
     
     return modules;

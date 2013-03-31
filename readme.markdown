@@ -57,6 +57,9 @@ The "expressions" array will contain the stringified expressions.
 Optionally you can specify a different function besides `"require"` to analyze
 with `opts.word`.
 
+You can also specify `opts.nodes = true` in order to include a "nodes" array 
+which contains an AST node for each of the require() calls.
+
 # install
 
 With [npm](https://npmjs.org) do:
