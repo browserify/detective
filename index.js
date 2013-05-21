@@ -4,8 +4,10 @@ var escodegen = require('escodegen');
 var traverse = function (node, cb) {
     if (Array.isArray(node)) {
         node.forEach(function (x) {
-            x.parent = node;
-            traverse(x, cb);
+            if(x != null) {
+                x.parent = node;
+                traverse(x, cb);
+            }
         });
     }
     else if (node && typeof node === 'object') {
