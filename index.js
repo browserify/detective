@@ -36,7 +36,7 @@ exports.find = function (src, opts) {
     if (typeof src !== 'string') src = String(src);
     src = '(function(){' + src.replace(/^#![^\n]*\n/, '') + '\n})()';
     
-    function isRequire (node) {
+    var isRequire = opts.isRequire || function (node) {
         var c = node.callee;
         return c
             && node.type === 'CallExpression'
