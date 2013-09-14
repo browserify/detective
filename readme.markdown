@@ -60,6 +60,9 @@ with `opts.word`.
 You can also specify `opts.nodes = true` in order to include a "nodes" array 
 which contains an AST node for each of the require() calls.
 
+You can use `opts.isRequire(node)` to return a boolean signifying whether an
+esprima AST `node` is a require call.
+
 # install
 
 With [npm](https://npmjs.org) do:
