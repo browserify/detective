@@ -1,7 +1,7 @@
 {
     "name" : "detective",
     "description" : "find all require() calls by walking the AST",
-    "version" : "2.1.2",
+    "version" : "2.2.0",
     "repository" : {
         "type" : "git",
         "url" : "git://github.com/substack/node-detective.git"
