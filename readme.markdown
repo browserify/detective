@@ -63,6 +63,8 @@ which contains an AST node for each of the require() calls.
 You can use `opts.isRequire(node)` to return a boolean signifying whether an
 esprima AST `node` is a require call.
 
+You can use `opts.parse` to supply options parsed to the parser ([esprima](http://esprima.org/doc/index.html)).
+
 # install
 
 With [npm](https://npmjs.org) do:
