@@ -21,8 +21,8 @@ var traverse = function (node, cb) {
     }
 };
 
-var walk = function (src, cb) {
-    var ast = esprima.parse(src);
+var walk = function (src, opts, cb) {
+    var ast = esprima.parse(src, opts);
     traverse(ast, cb);
 };
 
@@ -32,6 +32,8 @@ var exports = module.exports = function (src, opts) {
 
 exports.find = function (src, opts) {
     if (!opts) opts = {};
+    opts.parse = opts.parse || {};
+
     var word = opts.word === undefined ? 'require' : opts.word;
     if (typeof src !== 'string') src = String(src);
     src = '(function(){' + src.replace(/^#![^\n]*\n/, '') + '\n})()';
@@ -50,7 +52,7 @@ exports.find = function (src, opts) {
     
     if (src.indexOf(word) == -1) return modules;
     
-    walk(src, function (node) {
+    walk(src, opts.parse, function (node) {
         if (!isRequire(node)) return;
         if (node.arguments.length
         && node.arguments[0].type === 'Literal') {
