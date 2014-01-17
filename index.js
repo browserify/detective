@@ -33,10 +33,11 @@ var exports = module.exports = function (src, opts) {
 exports.find = function (src, opts) {
     if (!opts) opts = {};
     opts.parse = opts.parse || {};
+    opts.parse.tolerant = true;
 
     var word = opts.word === undefined ? 'require' : opts.word;
     if (typeof src !== 'string') src = String(src);
-    src = '(function(){' + src.replace(/^#![^\n]*\n/, '') + '\n})()';
+    src = src.replace(/^#![^\n]*\n/, '');
     
     var isRequire = opts.isRequire || function (node) {
         var c = node.callee;

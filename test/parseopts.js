@@ -16,8 +16,8 @@ test('nodes specified in opts and parseopts { range: true }', function (t) {
       'has a node for each require');
 
     var range = modules.nodes[0].range;
-    t.equal(range[0], 12, 'includes range start');
-    t.equal(range[1], 24, 'includes range end');
+    t.equal(range[0], 0, 'includes range start');
+    t.equal(range[1], 12, 'includes range end');
     t.end();
 });
 
@@ -50,13 +50,13 @@ test('nodes specified in opts and parseopts { range: true, loc: true }', functio
       'has a node for each require');
 
     var range = modules.nodes[0].range;
-    t.equal(range[0], 12, 'includes range start');
-    t.equal(range[1], 24, 'includes range end');
+    t.equal(range[0], 0, 'includes range start');
+    t.equal(range[1], 12, 'includes range end');
 
     var loc = modules.nodes[0].loc;
     t.equal(loc.start.line, 1, 'includes start line');
-    t.equal(loc.start.column, 12, 'includes start column');
+    t.equal(loc.start.column, 0, 'includes start column');
     t.equal(loc.end.line, 1, 'includes end line');
-    t.equal(loc.end.column, 24, 'includes end column');
+    t.equal(loc.end.column, 12, 'includes end column');
     t.end();
 });
