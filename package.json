@@ -1,32 +1,32 @@
 {
-    "name" : "detective",
-    "description" : "find all require() calls by walking the AST",
-    "version" : "2.3.0",
-    "repository" : {
-        "type" : "git",
-        "url" : "git://github.com/substack/node-detective.git"
-    },
-    "main" : "index.js",
-    "keywords" : [
-        "require",
-        "source",
-        "analyze",
-        "ast"
-    ],
-    "scripts" : {
-        "test" : "tap test/*.js"
-    },
-    "dependencies" : {
-        "esprima" : "1.0.2",
-        "escodegen": "0.0.15"
-    },
-    "devDependencies" : {
-        "tap" : "~0.4.0"
-    },
-    "license" : "MIT",
-    "author" : {
-        "name" : "James Halliday",
-        "email" : "mail@substack.net",
-        "url" : "http://substack.net"
-    }
+  "name": "detective",
+  "description": "find all require() calls by walking the AST",
+  "version": "2.3.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/substack/node-detective.git"
+  },
+  "main": "index.js",
+  "keywords": [
+    "require",
+    "source",
+    "analyze",
+    "ast"
+  ],
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "dependencies": {
+    "escodegen": "0.0.15",
+    "esprima-six": "0.0.3"
+  },
+  "devDependencies": {
+    "tap": "~0.4.0"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net"
+  }
 }
