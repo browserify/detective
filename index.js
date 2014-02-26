@@ -55,12 +55,13 @@ exports.find = function (src, opts) {
     
     walk(src, opts.parse, function (node) {
         if (!isRequire(node)) return;
-        if (node.arguments.length
-        && node.arguments[0].type === 'Literal') {
-            modules.strings.push(node.arguments[0].value);
-        }
-        else {
-            modules.expressions.push(escodegen.generate(node.arguments[0]));
+        if (node.arguments.length) {
+          if (node.arguments[0].type === 'Literal') {
+              modules.strings.push(node.arguments[0].value);
+          }
+          else {
+              modules.expressions.push(escodegen.generate(node.arguments[0]));
+          }
         }
         if (opts.nodes) modules.nodes.push(node);
     });
