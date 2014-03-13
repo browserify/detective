@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "escodegen": "~1.1.0",
-    "esprima": "~1.0.4"
+    "esprima-fb": "^3001.1.0-dev-harmony-fb"
   },
   "devDependencies": {
     "tap": "~0.4.0"
