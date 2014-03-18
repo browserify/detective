@@ -1,4 +1,4 @@
-var esprima = require('esprima');
+var esprima = require('esprima-six');
 var escodegen = require('escodegen');
 
 var traverse = function (node, cb) {

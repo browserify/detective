@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "escodegen": "~1.1.0",
-    "esprima": "~1.0.4"
+    "esprima-six": "0.0.3"
   },
   "devDependencies": {
     "tap": "~0.4.0"
