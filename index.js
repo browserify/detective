@@ -39,15 +39,6 @@ exports.find = function (src, opts) {
     if (typeof src !== 'string') src = String(src);
     src = src.replace(/^#![^\n]*\n/, '');
     
-    var isRequire = opts.isRequire || function (node) {
-        var c = node.callee;
-        return c
-            && node.type === 'CallExpression'
-            && c.type === 'Identifier'
-            && c.name === word
-        ;
-    }
-    
     var modules = { strings : [], expressions : [] };
     if (opts.nodes) modules.nodes = [];
     
@@ -57,6 +48,15 @@ exports.find = function (src, opts) {
         return src.indexOf(elem) !== -1;
     });
     if (!passed) return modules;
+    
+    var isRequire = opts.isRequire || function (node) {
+        var c = node.callee;
+        return c
+            && node.type === 'CallExpression'
+            && c.type === 'Identifier'
+            && word.indexOf(c.name) !== -1
+        ;
+    };    
     
     walk(src, opts.parse, function (node) {
         if (!isRequire(node)) return;
