@@ -51,7 +51,12 @@ exports.find = function (src, opts) {
     var modules = { strings : [], expressions : [] };
     if (opts.nodes) modules.nodes = [];
     
-    if (src.indexOf(word) == -1) return modules;
+    // Ensure opt.word is an array
+    if ('string' === typeof word) word = [word];
+    var passed = word.some(function(elem, idx) {
+        return src.indexOf(elem) !== -1;
+    });
+    if (!passed) return modules;
     
     walk(src, opts.parse, function (node) {
         if (!isRequire(node)) return;
