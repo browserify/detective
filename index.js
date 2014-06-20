@@ -42,7 +42,7 @@ exports.find = function (src, opts) {
     var modules = { strings : [], expressions : [] };
     if (opts.nodes) modules.nodes = [];
     
-    // Ensure opt.word is an array
+    // Ensure opt.word is an object
     var requireDict = {};
     if ('string' === typeof word) requireDict[word] = word;
     else if (word.constructor === Array) 
