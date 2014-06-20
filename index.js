@@ -43,8 +43,14 @@ exports.find = function (src, opts) {
     if (opts.nodes) modules.nodes = [];
     
     // Ensure opt.word is an array
-    if ('string' === typeof word) word = [word];
-    var passed = word.some(function(elem, idx) {
+    var requireDict = {};
+    if ('string' === typeof word) requireDict[word] = word;
+    else if (word.constructor === Array) 
+        word.forEach(function(elem) {
+            requireDict[elem] = elem;
+        });
+    else requireDict = word;
+    var passed = Object.keys(requireDict).some(function(elem, idx) {
         return src.indexOf(elem) !== -1;
     });
     if (!passed) return modules;
@@ -54,15 +60,20 @@ exports.find = function (src, opts) {
         return c
             && node.type === 'CallExpression'
             && c.type === 'Identifier'
-            && word.indexOf(c.name) !== -1
+            && requireDict[c.name] !== undefined
         ;
     };    
     
     walk(src, opts.parse, function (node) {
         if (!isRequire(node)) return;
+        var name = node.callee.name;
         if (node.arguments.length) {
             if (node.arguments[0].type === 'Literal') {
-                modules.strings.push(node.arguments[0].value);
+                var id = node.arguments[0].value;
+                if ('function' === typeof requireDict[name]) {
+                    id = requireDict[name](id);
+                }
+                modules.strings.push(id);
             }
             else {
                 modules.expressions.push(escodegen.generate(node.arguments[0]));
