@@ -11,7 +11,7 @@ var traverse = function (node, cb) {
         });
     }
     else if (node && typeof node === 'object') {
-        cb(node);
+        cb(undefined, node);
 
         Object.keys(node).forEach(function (key) {
             if (key === 'parent' || !node[key]) return;
@@ -22,7 +22,11 @@ var traverse = function (node, cb) {
 };
 
 var walk = function (src, opts, cb) {
-    var ast = esprima.parse(src, opts);
+    try {
+        var ast = esprima.parse(src, opts);
+    } catch (err) {
+        return cb (err);
+    }
     traverse(ast, cb);
 };
 
@@ -53,7 +57,11 @@ exports.find = function (src, opts) {
     
     if (src.indexOf(word) == -1) return modules;
     
-    walk(src, opts.parse, function (node) {
+    walk(src, opts.parse, function (err, node) {
+        if (err) {
+            if (opts.silent) return;
+            throw err;
+        }
         if (!isRequire(node)) return;
         if (node.arguments.length) {
             if (node.arguments[0].type === 'Literal') {
