@@ -60,6 +60,9 @@ argument found in a `require()` call
 Optionally:
 
 * `opts.word` - specify a different function name instead of `"require"`
+* `opts.properties` - specify properties that can be called on `require` or `opts.word`
+that will also be captured
+  * Example: `["resolve"]` in order to also catch `var pathToA = require.resolve('a');`
 * `opts.nodes` - when `true`, populate `found.nodes`
 * `opts.isRequire(node)` - a function returning whether an AST node is a require
 call

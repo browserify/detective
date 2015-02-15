@@ -50,25 +50,42 @@ exports.find = function (src, opts) {
     if (!opts) opts = {};
     opts.parse = opts.parse || {};
     opts.parse.tolerant = true;
-    
+
     var word = opts.word === undefined ? 'require' : opts.word;
+    var properties = opts.properties === undefined ? [] : opts.properties
     if (typeof src !== 'string') src = String(src);
     src = src.replace(/^#![^\n]*\n/, '');
-    
+
     var isRequire = opts.isRequire || function (node) {
-        var c = node.callee;
-        return c
-            && node.type === 'CallExpression'
-            && c.type === 'Identifier'
-            && c.name === word
-        ;
+        var callee = node.callee;
+        if (node.type === 'CallExpression' &&
+            callee.type === 'Identifier' &&
+            callee.name === word)
+        {
+            return true;
+        }
+        if (node.type === 'CallExpression' &&
+            callee.type === 'MemberExpression' &&
+            callee.object.type === 'Identifier' &&
+            callee.object.name === word)
+        {
+            for (var i = 0; i < properties.length; i++) {
+                var property = properties[i];
+                if (callee.property.type === 'Identifier' &&
+                    callee.property.name === property)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-    
+
     var modules = { strings : [], expressions : [] };
     if (opts.nodes) modules.nodes = [];
-    
+
     if (src.indexOf(word) == -1) return modules;
-    
+
     walk(src, opts.parse, function (node) {
         if (!isRequire(node)) return;
         if (node.arguments.length) {
@@ -81,6 +98,6 @@ exports.find = function (src, opts) {
         }
         if (opts.nodes) modules.nodes.push(node);
     });
-    
+
     return modules;
 };
