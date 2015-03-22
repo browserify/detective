@@ -63,6 +63,7 @@ Optionally:
 * `opts.nodes` - when `true`, populate `found.nodes`
 * `opts.isRequire(node)` - a function returning whether an AST node is a require
 call
+* `opts.unreachables` - when `true`, include unreachable `require()` calls
 * `opts.parse` - supply options directly to
 [acorn](https://npmjs.org/package/acorn) with some support for esprima-style
 options `range` and `loc`
