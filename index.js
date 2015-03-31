@@ -49,7 +49,7 @@ var exports = module.exports = function (src, opts) {
 exports.find = function (src, opts) {
     if (!opts) opts = {};
     opts.parse = opts.parse || {};
-    opts.parse.tolerant = true;
+    opts.parse.tolerant = opts.parse.tolerant == null ? true : !!opts.parse.tolerant;
     
     var word = opts.word === undefined ? 'require' : opts.word;
     if (typeof src !== 'string') src = String(src);
