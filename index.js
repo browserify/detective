@@ -3,6 +3,13 @@ var defined = require('defined');
 
 function parse (src, opts) {
     if (!opts) opts = {};
+    var plugins = {};
+
+    if (opts.jsx) {
+        aparse = require('acorn-jsx').parse;
+        plugins.jsx = true;
+    }
+
     return aparse(src, {
         ecmaVersion: defined(opts.ecmaVersion, 6),
         ranges: defined(opts.ranges, opts.range),
@@ -12,7 +19,8 @@ function parse (src, opts) {
         ),
         strictSemicolons: defined(opts.strictSemicolons, false),
         allowTrailingCommas: defined(opts.allowTrailingCommas, true),
-        forbidReserved: defined(opts.forbidReserved, false)
+        forbidReserved: defined(opts.forbidReserved, false),
+        plugins: plugins
     });
 }
 var escodegen = require('escodegen');
