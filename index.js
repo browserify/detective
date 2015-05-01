@@ -58,23 +58,21 @@ exports.find = function (src, opts) {
 
     var isRequire = opts.isRequire || function (node) {
         var callee = node.callee;
-        if (node.type === 'CallExpression' &&
-            callee.type === 'Identifier' &&
-            callee.name === word)
-        {
-            return true;
-        }
-        if (node.type === 'CallExpression' &&
-            callee.type === 'MemberExpression' &&
-            callee.object.type === 'Identifier' &&
-            callee.object.name === word)
-        {
-            for (var i = 0; i < properties.length; i++) {
-                var property = properties[i];
-                if (callee.property.type === 'Identifier' &&
-                    callee.property.name === property)
-                {
-                    return true;
+        if (node.type === 'CallExpression') {
+            if (callee.type === 'Identifier' &&
+                callee.name === word)
+            {
+                return true;
+            }
+            else if (callee.type === 'MemberExpression' &&
+                     callee.object.type === 'Identifier' &&
+                     callee.object.name === word &&
+                     callee.property.type === 'Identifier')
+            {
+                for (var i = 0; i < properties.length; i++) {
+                    if (callee.property.name === properties[i]) {
+                        return true;
+                    }
                 }
             }
         }
