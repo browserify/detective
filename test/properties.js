@@ -5,8 +5,8 @@ var src = fs.readFileSync(__dirname + '/files/properties.js');
 
 test('word', function (t) {
     t.deepEqual(
-        detective(src, { properties: ['async'] }),
-        [ 'a', 'b', 'c', 'events', 'doom', 'y', 'events2' ]
+        detective(src, { properties: ['resolve'] }),
+        [ 'a', 'b' ]
     );
     t.end();
 });
