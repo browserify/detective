@@ -1,6 +1,8 @@
 var aparse = require('acorn').parse;
 var defined = require('defined');
 
+var requireRe = /\brequire\b/;
+
 function parse (src, opts) {
     if (!opts) opts = {};
     return aparse(src, {
@@ -67,7 +69,8 @@ exports.find = function (src, opts) {
     var modules = { strings : [], expressions : [] };
     if (opts.nodes) modules.nodes = [];
     
-    if (src.indexOf(word) == -1) return modules;
+    var wordRe = word === 'require' ? requireRe : RegExp('\\b' + word + '\\b');
+    if (!wordRe.test(src)) return modules;
     
     walk(src, opts.parse, function (node) {
         if (!isRequire(node)) return;
