@@ -19,7 +19,8 @@
   "dependencies": {
     "acorn": "^1.0.3",
     "defined": "0.0.0",
-    "escodegen": "^1.4.1"
+    "escodegen": "^1.4.1",
+    "esmangle-evaluator": "^1.0.0"
   },
   "devDependencies": {
     "tap": "~0.4.0"
