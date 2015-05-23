@@ -9,12 +9,10 @@ function parse (src, opts) {
         ecmaVersion: defined(opts.ecmaVersion, 6),
         ranges: defined(opts.ranges, opts.range),
         locations: defined(opts.locations, opts.loc),
+        allowReserved: defined(opts.allowReserved, true),
         allowReturnOutsideFunction: defined(
             opts.allowReturnOutsideFunction, true
-        ),
-        strictSemicolons: defined(opts.strictSemicolons, false),
-        allowTrailingCommas: defined(opts.allowTrailingCommas, true),
-        forbidReserved: defined(opts.forbidReserved, false)
+        )
     });
 }
 var escodegen = require('escodegen');
@@ -51,7 +49,6 @@ var exports = module.exports = function (src, opts) {
 exports.find = function (src, opts) {
     if (!opts) opts = {};
     opts.parse = opts.parse || {};
-    opts.parse.tolerant = true;
     
     var word = opts.word === undefined ? 'require' : opts.word;
     if (typeof src !== 'string') src = String(src);
