@@ -49,7 +49,6 @@ var exports = module.exports = function (src, opts) {
 
 exports.find = function (src, opts) {
     if (!opts) opts = {};
-    opts.parse = opts.parse || {};
     
     var word = opts.word === undefined ? 'require' : opts.word;
     if (typeof src !== 'string') src = String(src);
