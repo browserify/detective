@@ -12,7 +12,8 @@ function parse (src, opts) {
         allowReserved: defined(opts.allowReserved, true),
         allowReturnOutsideFunction: defined(
             opts.allowReturnOutsideFunction, true
-        )
+        ),
+        allowHashBang: defined(opts.allowHashBang, true)
     });
 }
 var escodegen = require('escodegen');
@@ -52,7 +53,6 @@ exports.find = function (src, opts) {
     
     var word = opts.word === undefined ? 'require' : opts.word;
     if (typeof src !== 'string') src = String(src);
-    src = src.replace(/^#![^\n]*\n/, '');
     
     var isRequire = opts.isRequire || function (node) {
         var c = node.callee;
