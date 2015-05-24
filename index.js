@@ -1,4 +1,5 @@
 var aparse = require('acorn').parse;
+var escodegen = require('escodegen');
 var defined = require('defined');
 
 var requireRe = /\brequire\b/;
@@ -16,7 +17,6 @@ function parse (src, opts) {
         allowHashBang: defined(opts.allowHashBang, true)
     });
 }
-var escodegen = require('escodegen');
 
 var traverse = function (node, cb) {
     if (Array.isArray(node)) {
