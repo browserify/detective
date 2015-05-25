@@ -1,4 +1,5 @@
 var aparse = require('acorn').parse;
+var escodegen = require('escodegen');
 var defined = require('defined');
 
 var requireRe = /\brequire\b/;
@@ -9,33 +10,31 @@ function parse (src, opts) {
         ecmaVersion: defined(opts.ecmaVersion, 6),
         ranges: defined(opts.ranges, opts.range),
         locations: defined(opts.locations, opts.loc),
+        allowReserved: defined(opts.allowReserved, true),
         allowReturnOutsideFunction: defined(
             opts.allowReturnOutsideFunction, true
         ),
-        strictSemicolons: defined(opts.strictSemicolons, false),
-        allowTrailingCommas: defined(opts.allowTrailingCommas, true),
-        forbidReserved: defined(opts.forbidReserved, false)
+        allowHashBang: defined(opts.allowHashBang, true)
     });
 }
-var escodegen = require('escodegen');
 
 var traverse = function (node, cb) {
     if (Array.isArray(node)) {
-        node.forEach(function (x) {
-            if(x != null) {
-                x.parent = node;
-                traverse(x, cb);
+        for (var i = 0; i < node.length; i++) {
+            if (node[i] != null) {
+                node[i].parent = node;
+                traverse(node[i], cb);
             }
-        });
+        }
     }
     else if (node && typeof node === 'object') {
         cb(node);
-
-        Object.keys(node).forEach(function (key) {
-            if (key === 'parent' || !node[key]) return;
+        for (var key in node) {
+            if (!node.hasOwnProperty(key)) continue;
+            if (key === 'parent' || !node[key]) continue;
             node[key].parent = node;
             traverse(node[key], cb);
-        });
+        }
     }
 };
 
@@ -50,12 +49,9 @@ var exports = module.exports = function (src, opts) {
 
 exports.find = function (src, opts) {
     if (!opts) opts = {};
-    opts.parse = opts.parse || {};
-    opts.parse.tolerant = true;
     
     var word = opts.word === undefined ? 'require' : opts.word;
     if (typeof src !== 'string') src = String(src);
-    src = src.replace(/^#![^\n]*\n/, '');
     
     var isRequire = opts.isRequire || function (node) {
         var c = node.callee;
