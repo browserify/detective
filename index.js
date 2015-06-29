@@ -21,10 +21,8 @@ function parse (src, opts) {
 var traverse = function (node, cb) {
     if (Array.isArray(node)) {
         for (var i = 0; i < node.length; i++) {
-            if (node[i] != null) {
-                node[i].parent = node;
-                traverse(node[i], cb);
-            }
+            node[i].parent = node;
+            traverse(node[i], cb);
         }
     }
     else {
