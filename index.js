@@ -27,13 +27,18 @@ var traverse = function (node, cb) {
             }
         }
     }
-    else if (node && typeof node === 'object') {
+    else {
         cb(node);
         for (var key in node) {
-            if (!node.hasOwnProperty(key)) continue;
-            if (key === 'parent' || !node[key]) continue;
-            node[key].parent = node;
-            traverse(node[key], cb);
+            if (
+                node.hasOwnProperty(key) &&
+                key !== 'parent' &&
+                node[key] &&
+                typeof node[key] === 'object'
+            ) {
+                node[key].parent = node;
+                traverse(node[key], cb);
+            }
         }
     }
 };
