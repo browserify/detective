@@ -8,6 +8,7 @@ function parse (src, opts) {
     if (!opts) opts = {};
     return aparse(src, {
         ecmaVersion: defined(opts.ecmaVersion, 6),
+        sourceType: opts.sourceType,
         ranges: defined(opts.ranges, opts.range),
         locations: defined(opts.locations, opts.loc),
         allowReserved: defined(opts.allowReserved, true),
