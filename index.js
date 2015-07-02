@@ -22,19 +22,24 @@ function parse (src, opts) {
 var traverse = function (node, cb) {
     if (Array.isArray(node)) {
         for (var i = 0; i < node.length; i++) {
-            if (node[i] != null) {
-                node[i].parent = node;
-                traverse(node[i], cb);
-            }
+		if (node[i] != null){
+	                node[i].parent = node;
+        	        traverse(node[i], cb);
+		}
         }
     }
-    else if (node && typeof node === 'object') {
+    else {
         cb(node);
         for (var key in node) {
-            if (!node.hasOwnProperty(key)) continue;
-            if (key === 'parent' || !node[key]) continue;
-            node[key].parent = node;
-            traverse(node[key], cb);
+            if (
+                node.hasOwnProperty(key) &&
+                key !== 'parent' &&
+                node[key] &&
+                typeof node[key] === 'object'
+            ) {
+                node[key].parent = node;
+                traverse(node[key], cb);
+            }
         }
     }
 };
