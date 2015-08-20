@@ -61,8 +61,8 @@ Optionally:
 
 * `opts.word` - specify a different function name instead of `"require"`
 * `opts.nodes` - when `true`, populate `found.nodes`
-* `opts.isRequire(node)` - a function returning whether an AST node is a require
-call
+* `opts.isRequire(node)` - a function returning whether an AST `CallExpression`
+node is a require call
 * `opts.parse` - supply options directly to
 [acorn](https://npmjs.org/package/acorn) with some support for esprima-style
 options `range` and `loc`
