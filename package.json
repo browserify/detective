@@ -16,10 +16,12 @@
   "scripts": {
     "test": "tap test/*.js"
   },
+  "bin": "bin/detective.js",
   "dependencies": {
     "acorn": "^1.0.3",
     "defined": "^1.0.0",
-    "escodegen": "^1.4.1"
+    "escodegen": "^1.4.1",
+    "minimist": "^1.1.1"
   },
   "devDependencies": {
     "tap": "^1.0.0"
