@@ -26,6 +26,7 @@ var exports = module.exports = function (src, opts) {
 
 exports.find = function (src, opts) {
     if (!opts) opts = {};
+    var isESNext = (opts.parse && opts.parse.ecmaVersion) >= 6;
     
     var word = opts.word === undefined ? 'require' : opts.word;
     if (typeof src !== 'string') src = String(src);
@@ -40,11 +41,22 @@ exports.find = function (src, opts) {
     if (opts.nodes) modules.nodes = [];
     
     var wordRe = word === 'require' ? requireRe : RegExp('\\b' + word + '\\b');
-    if (!wordRe.test(src)) return modules;
+    if (!isESNext && !wordRe.test(src)) return modules;
     
     var ast = parse(src, opts.parse);
     
+    var importDeclaration;
+    if (isESNext) {
+        importDeclaration = function (node) {
+            if (node.source.type === 'Literal') {
+                modules.strings.push(node.source.value);
+            }
+            if (opts.nodes) modules.nodes.push(node);
+        };
+    }
+
     walk.simple(ast, {
+        ImportDeclaration: importDeclaration,
         CallExpression: function (node) {
             if (!isRequire(node)) return;
             if (node.arguments.length) {
