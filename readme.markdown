@@ -1,6 +1,6 @@
 # detective
 
-find all calls to `require()` by walking the AST
+find all calls to `require()` or ES6 `import` by walking the AST
 
 [![build status](https://secure.travis-ci.org/substack/node-detective.png)](http://travis-ci.org/substack/node-detective)
 
@@ -66,6 +66,16 @@ node is a require call
 * `opts.parse` - supply options directly to
 [acorn](https://npmjs.org/package/acorn) with some support for esprima-style
 options `range` and `loc`
+
+## ES6
+
+The following option will also search for ES6 `import` statements.
+
+```js
+var imports = detective(source, {
+  parse: { sourceType: 'module', ecmaVersion: 6 }
+})
+```
 
 # install
 
