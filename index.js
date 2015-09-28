@@ -1,5 +1,4 @@
 var acorn = require('acorn');
-var walk = require('acorn/dist/walk');
 var escodegen = require('escodegen');
 var defined = require('defined');
 var hasOwn = Object.prototype.hasOwnProperty;
@@ -33,6 +32,14 @@ function parse (src, opts) {
     });
 }
 
+function isNode(value) {
+    return value
+        && typeof value === "object"
+        && typeof value.type === "string"
+        && typeof value.start === "number"
+        && typeof value.end === "number";
+}
+
 var exports = module.exports = function (src, opts) {
     return exports.find(src, opts).strings;
 };
@@ -53,24 +60,71 @@ exports.find = function (src, opts) {
     if (opts.nodes) modules.nodes = [];
 
     var wordRe = getOrCreateRegExp(word);
-    if (!wordRe.test(src)) return modules;
+
+    // Use the wordRe regular expression to determine all possible indexes
+    // where the desired word might appear in the source. As we walk the
+    // AST, we will examine the .start and .end offsets of each node, and
+    // ignore nodes that do not contain any of the possible indexes. Some
+    // of the possible indexes may be be spurious, but the AST traversal
+    // will prune out those false positives.
+    var possibleIndexes = [], match;
+    while ((match = wordRe.exec(src))) {
+        possibleIndexes.push(match.index);
+    }
+
+    if (!possibleIndexes.length) {
+        return modules;
+    }
 
     var ast = parse(src, opts.parse);
-    
-    walk.simple(ast, {
-        CallExpression: function (node) {
-            if (!isRequire(node)) return;
-            if (node.arguments.length) {
-                if (node.arguments[0].type === 'Literal') {
-                    modules.strings.push(node.arguments[0].value);
+
+    function walk(node, left, right) {
+        if (left >= right) {
+            // The window of possible indexes is empty, so we can ignore
+            // the entire subtree rooted at this node.
+        } else if (Array.isArray(node)) {
+            for (var i = 0, len = node.length; i < len; ++i) {
+                walk(node[i], left, right);
+            }
+        } else if (isNode(node)) {
+            var start = node.start;
+            var end = node.end;
+
+            // Narrow the left-right window to exclude possible indexes
+            // that fall outside of the current node.
+            while (left < right && possibleIndexes[left] < start) ++left;
+            while (left < right && end < possibleIndexes[right - 1]) --right;
+
+            if (left < right) {
+                if (node.type === "CallExpression" && isRequire(node)) {
+                    var args = node.arguments;
+                    var argc = args.length;
+                    if (argc > 0) {
+                        var arg = args[0];
+                        if (arg.type === "Literal" &&
+                            typeof arg.value === "string") {
+                            modules.strings.push(arg.value);
+                        } else {
+                            modules.expressions.push(escodegen.generate(arg));
+                        }
+                    }
+
+                    if (opts.nodes) {
+                        modules.nodes.push(node);
+                    }
+
+                    return;
                 }
-                else {
-                    modules.expressions.push(escodegen.generate(node.arguments[0]));
+
+                var keys = Object.keys(node);
+                for (var i = 0, len = keys.length; i < len; ++i) {
+                    walk(node[keys[i]], left, right);
                 }
             }
-            if (opts.nodes) modules.nodes.push(node);
         }
-    });
+    }
+
+    walk(ast, 0, possibleIndexes.length);
     
     return modules;
 };
