@@ -2,7 +2,7 @@ var acorn = require('acorn');
 var defined = require('defined');
 var hasOwn = Object.prototype.hasOwnProperty;
 var cachedRegExps = {
-    require: /\brequire\b/g
+    require: /\b(?:require|import|export)\b/g
 };
 
 function getOrCreateRegExp(word) {
@@ -108,16 +108,28 @@ exports.find = function (src, opts) {
                         }
                     }
 
-                    if (opts.nodes) {
-                        modules.nodes.push(node);
+                } else if (node.type === "ImportDeclaration" ||
+                           node.type === "ExportNamedDeclaration" ||
+                           node.type === "ExportAllDeclaration") {
+                    if (node.source) {
+                        // The .source of an ImportDeclaration or
+                        // Export{Named,All}Declaration is always a
+                        // string-valued Literal node, if not null.
+                        modules.strings.push(node.source.value);
+                    }
+
+                } else {
+                    // Continue traversing the children of this node.
+                    var keys = Object.keys(node);
+                    for (var i = 0, len = keys.length; i < len; ++i) {
+                        walk(node[keys[i]], left, right);
                     }
 
                     return;
                 }
 
-                var keys = Object.keys(node);
-                for (var i = 0, len = keys.length; i < len; ++i) {
-                    walk(node[keys[i]], left, right);
+                if (opts.nodes) {
+                    modules.nodes.push(node);
                 }
             }
         }
