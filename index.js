@@ -122,7 +122,18 @@ exports.find = function (src, opts) {
                     // Continue traversing the children of this node.
                     var keys = Object.keys(node);
                     for (var i = 0, len = keys.length; i < len; ++i) {
-                        walk(node[keys[i]], left, right);
+                        var key = keys[i];
+
+                        switch (key) {
+                        case "type":
+                        case "loc":
+                        case "start":
+                        case "end":
+                            // Ignore common keys that are never nodes.
+                            continue;
+                        }
+
+                        walk(node[key], left, right);
                     }
 
                     return;
