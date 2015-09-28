@@ -2,8 +2,21 @@ var acorn = require('acorn');
 var walk = require('acorn/dist/walk');
 var escodegen = require('escodegen');
 var defined = require('defined');
+var hasOwn = Object.prototype.hasOwnProperty;
+var cachedRegExps = {
+    require: /\brequire\b/g
+};
 
-var requireRe = /\brequire\b/;
+function getOrCreateRegExp(word) {
+    var regExp = hasOwn.call(cachedRegExps, word)
+        ? cachedRegExps[word]
+        : cachedRegExps[word] = new RegExp(
+            cachedRegExps.require.source.replace("require", word),
+            "g"
+        );
+    regExp.lastIndex = 0;
+    return regExp;
+}
 
 function parse (src, opts) {
     if (!opts) opts = {};
@@ -38,10 +51,10 @@ exports.find = function (src, opts) {
     
     var modules = { strings : [], expressions : [] };
     if (opts.nodes) modules.nodes = [];
-    
-    var wordRe = word === 'require' ? requireRe : RegExp('\\b' + word + '\\b');
+
+    var wordRe = getOrCreateRegExp(word);
     if (!wordRe.test(src)) return modules;
-    
+
     var ast = parse(src, opts.parse);
     
     walk.simple(ast, {
