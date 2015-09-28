@@ -1,5 +1,4 @@
 var acorn = require('acorn');
-var escodegen = require('escodegen');
 var defined = require('defined');
 var hasOwn = Object.prototype.hasOwnProperty;
 var cachedRegExps = {
@@ -105,7 +104,7 @@ exports.find = function (src, opts) {
                             typeof arg.value === "string") {
                             modules.strings.push(arg.value);
                         } else {
-                            modules.expressions.push(escodegen.generate(arg));
+                            modules.expressions.push(src.slice(arg.start, arg.end));
                         }
                     }
 
