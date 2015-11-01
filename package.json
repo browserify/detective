@@ -18,8 +18,7 @@
   },
   "dependencies": {
     "acorn": "^1.0.3",
-    "defined": "^1.0.0",
-    "escodegen": "^1.4.1"
+    "defined": "^1.0.0"
   },
   "devDependencies": {
     "tap": "^1.0.0"
