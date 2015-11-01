@@ -43,9 +43,12 @@ exports.find = function (src, opts) {
     
     var ast = parse(src, opts.parse);
     
-    walk.simple(ast, {
-        CallExpression: function (node) {
-            if (!isRequire(node)) return;
+    function visit(node, st, c) {
+        var hasRequire = wordRe.test(src.slice(node.start, node.end));
+        if (!hasRequire) return;
+        walk.base[node.type](node, st, c);
+        if (node.type !== 'CallExpression') return;
+        if (isRequire(node)) {
             if (node.arguments.length) {
                 var arg = node.arguments[0];
                 if (arg.type === 'Literal') {
@@ -57,6 +60,11 @@ exports.find = function (src, opts) {
             }
             if (opts.nodes) modules.nodes.push(node);
         }
+    }
+    
+    walk.recursive(ast, null, {
+        Statement: visit,
+        Expression: visit
     });
     
     return modules;
