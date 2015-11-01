@@ -1,6 +1,5 @@
 var acorn = require('acorn');
 var walk = require('acorn/dist/walk');
-var escodegen = require('escodegen');
 var defined = require('defined');
 
 var requireRe = /\brequire\b/;
@@ -48,11 +47,12 @@ exports.find = function (src, opts) {
         CallExpression: function (node) {
             if (!isRequire(node)) return;
             if (node.arguments.length) {
-                if (node.arguments[0].type === 'Literal') {
-                    modules.strings.push(node.arguments[0].value);
+                var arg = node.arguments[0];
+                if (arg.type === 'Literal') {
+                    modules.strings.push(arg.value);
                 }
                 else {
-                    modules.expressions.push(escodegen.generate(node.arguments[0]));
+                    modules.expressions.push(src.slice(arg.start, arg.end));
                 }
             }
             if (opts.nodes) modules.nodes.push(node);
