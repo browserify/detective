@@ -6,8 +6,8 @@ var requireRe = /\brequire\b/;
 
 function parse (src, opts) {
     if (!opts) opts = {};
-    var acornOpts = defined(opts.acorn, {});
-    var acornParser = defined(acornOpts.parser, acorn);
+    opts.acorn = defined(opts.acorn, {});
+    acorn = defined(opts.acorn.parser, acorn);
     opts = Object.assign({}, {
         ecmaVersion: defined(opts.ecmaVersion, 6),
         sourceType: opts.sourceType,
@@ -18,8 +18,8 @@ function parse (src, opts) {
             opts.allowReturnOutsideFunction, true
         ),
         allowHashBang: defined(opts.allowHashBang, true),
-    }, acornOpts.opts);
-    return acornParser.parse(src, opts);
+    }, opts.acorn.opts);
+    return acorn.parse(src, opts);
 }
 
 var exports = module.exports = function (src, opts) {
