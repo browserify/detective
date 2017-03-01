@@ -66,6 +66,7 @@ node is a require call
 * `opts.parse` - supply options directly to
 [acorn](https://npmjs.org/package/acorn) with some support for esprima-style
 options `range` and `loc`
+* `opts.ecmaVersion` - default: 8
 
 # install
 

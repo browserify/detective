@@ -7,7 +7,7 @@ var requireRe = /\brequire\b/;
 function parse (src, opts) {
     if (!opts) opts = {};
     return acorn.parse(src, {
-        ecmaVersion: defined(opts.ecmaVersion, 6),
+        ecmaVersion: defined(opts.ecmaVersion, 8),
         sourceType: opts.sourceType,
         ranges: defined(opts.ranges, opts.range),
         locations: defined(opts.locations, opts.loc),
