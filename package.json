@@ -17,7 +17,7 @@
     "test": "tap test/*.js"
   },
   "dependencies": {
-    "acorn": "^4.0.3",
+    "acorn": "5.2.1",
     "defined": "^1.0.0"
   },
   "devDependencies": {
