@@ -21,7 +21,7 @@
     "defined": "^1.0.0"
   },
   "devDependencies": {
-    "tap": "^5.7.1"
+    "tap": "^10.7.3"
   },
   "license": "MIT",
   "author": {
