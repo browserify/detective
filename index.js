@@ -15,6 +15,9 @@ function parse (src, opts) {
         allowReturnOutsideFunction: defined(
             opts.allowReturnOutsideFunction, true
         ),
+        allowImportExportEverywhere: defined(
+            opts.allowImportExportEverywhere, true
+        ),
         allowHashBang: defined(opts.allowHashBang, true)
     });
 }
