@@ -2,7 +2,7 @@
 
 find all calls to `require()` by walking the AST
 
-[![build status](https://secure.travis-ci.org/substack/node-detective.png)](http://travis-ci.org/substack/node-detective)
+[![build status](https://secure.travis-ci.org/browserify/detective.png)](http://travis-ci.org/browserify/detective)
 
 # example
 

@@ -4,7 +4,7 @@
   "version": "4.5.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/substack/node-detective.git"
+    "url": "git://github.com/browserify/detective.git"
   },
   "main": "index.js",
   "keywords": [
