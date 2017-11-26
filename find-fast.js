@@ -32,20 +32,6 @@ module.exports = function findFast(src, opts) {
             args = [];
         } else if (state === ST_INSIDE_CALL) {
             if (token.type === acorn.tokTypes.parenR) { // End of fn() call
-                var node;
-                // When a custom `isRequire` is passed, we need to parse the entire CallExpression and pass it to the function.
-                if (opts.nodes || opts.isRequire) {
-                    // Cut `src` at the end of this call, so that parseExpressionAt doesn't consider the `.abc` in
-                    // `require('xyz').abc`
-                    var chunk = src.slice(0, token.end);
-                    node = acorn.parseExpressionAt(chunk, opener.start, opts.parse);
-                }
-
-                if (opts.isRequire && !opts.isRequire(node)) {
-                    state = ST_NONE;
-                    continue;
-                }
-
                 if (args.length === 1 && args[0].type === acorn.tokTypes.string) {
                     modules.strings.push(args[0].value);
                 } else if (args.length > 0) {
@@ -53,6 +39,10 @@ module.exports = function findFast(src, opts) {
                 }
 
                 if (opts.nodes) {
+                    // Cut `src` at the end of this call, so that parseExpressionAt doesn't consider the `.abc` in
+                    // `require('xyz').abc`
+                    var chunk = src.slice(0, token.end);
+                    var node = acorn.parseExpressionAt(chunk, opener.start, opts.parse);
                     modules.nodes.push(node);
                 }
 
@@ -67,10 +57,6 @@ module.exports = function findFast(src, opts) {
     return modules;
 
     function mayBeRequire(token) {
-        if (opts.isRequire) {
-            // We'll parse all callexpressions in this case.
-            return token.type === acorn.tokTypes.name;
-        }
         return token.type === acorn.tokTypes.name &&
             token.value === opts.word;
     }
