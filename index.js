@@ -1,5 +1,6 @@
 var acorn = require('acorn-node');
 var walk = require('acorn-node/walk');
+var copy = require('shallow-copy');
 var defined = require('defined');
 var fastFind = require('./find-fast');
 
@@ -29,7 +30,8 @@ var exports = module.exports = function (src, opts) {
 
 exports.find = function (src, opts) {
     if (!opts) opts = {};
-    opts = Object.assign({}, opts, { parse: getParseOpts(opts.parse) });
+    else opts = copy(opts);
+    opts.parse = getParseOpts(opts.parse);
 
     if (!opts.isRequire && !opts.fullParse) {
         return fastFind(src, opts);
