@@ -57,6 +57,12 @@ exports.find = function (src, opts) {
                 if (arg.type === 'Literal') {
                     modules.strings.push(arg.value);
                 }
+                else if (arg.type === 'TemplateLiteral'
+                        && arg.quasis.length === 1
+                        && arg.expressions.length === 0) {
+
+                    modules.strings.push(arg.quasis[0].value.raw);
+                }
                 else {
                     modules.expressions.push(src.slice(arg.start, arg.end));
                 }

@@ -3,6 +3,8 @@ var detective = require('../');
 
 var sources = [
     'require("a")',
+    "require('a')",
+    'require(`a`)',
     ';require("a")',
     ' require("a")',
     'void require("a")',
