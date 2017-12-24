@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "acorn": "^5.2.1",
+    "acorn5-object-spread": "^5.0.0",
     "defined": "^1.0.0"
   },
   "devDependencies": {
