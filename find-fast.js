@@ -34,6 +34,11 @@ module.exports = function findFast(src, opts) {
             if (token.type === acorn.tokTypes.parenR) { // End of fn() call
                 if (args.length === 1 && args[0].type === acorn.tokTypes.string) {
                     modules.strings.push(args[0].value);
+                } else if (args.length === 3 // A template string without any expressions
+                          && args[0].type === acorn.tokTypes.backQuote
+                          && args[1].type === acorn.tokTypes.template
+                          && args[2].type === acorn.tokTypes.backQuote) {
+                    modules.strings.push(args[1].value);
                 } else if (args.length > 0) {
                     modules.expressions.push(src.slice(args[0].start, args[args.length - 1].end));
                 }
