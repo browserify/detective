@@ -1,4 +1,4 @@
-var acorn = require('acorn5-object-spread/inject')(require('acorn'));
+var acorn = require('@browserify/acorn5-object-spread/inject')(require('acorn'));
 var walk = require('acorn/dist/walk');
 var defined = require('defined');
 

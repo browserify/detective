@@ -9,14 +9,14 @@
   },
   "dependencies": {
     "acorn": "^5.2.1",
-    "acorn5-object-spread": "^5.0.0",
+    "@browserify/acorn5-object-spread": "^5.0.1",
     "defined": "^1.0.0"
   },
   "devDependencies": {
     "tap": "^10.7.3"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=0.8.0"
   },
   "keywords": [
     "analyze",
