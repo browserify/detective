@@ -8,8 +8,7 @@
     "url": "http://substack.net"
   },
   "dependencies": {
-    "acorn": "^5.2.1",
-    "@browserify/acorn5-object-spread": "^5.0.1",
+    "acorn-node": "^1.3.0",
     "defined": "^1.0.0"
   },
   "devDependencies": {
