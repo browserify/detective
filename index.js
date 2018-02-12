@@ -1,5 +1,5 @@
-var acorn = require('@browserify/acorn5-object-spread/inject')(require('acorn'));
-var walk = require('acorn/dist/walk');
+var acorn = require('acorn-node');
+var walk = require('acorn-node/walk');
 var defined = require('defined');
 
 var requireRe = /\brequire\b/;
@@ -8,7 +8,7 @@ function parse (src, opts) {
     if (!opts) opts = {};
     return acorn.parse(src, {
         ecmaVersion: defined(opts.ecmaVersion, 9),
-        sourceType: opts.sourceType,
+        sourceType: defined(opts.sourceType, 'script'),
         ranges: defined(opts.ranges, opts.range),
         locations: defined(opts.locations, opts.loc),
         allowReserved: defined(opts.allowReserved, true),
@@ -18,8 +18,7 @@ function parse (src, opts) {
         allowImportExportEverywhere: defined(
             opts.allowImportExportEverywhere, true
         ),
-        allowHashBang: defined(opts.allowHashBang, true),
-        plugins: { objectSpread: true }
+        allowHashBang: defined(opts.allowHashBang, true)
     });
 }
 
