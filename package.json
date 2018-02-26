@@ -11,7 +11,7 @@
   "dependencies": {
     "acorn-node": "^1.3.0",
     "defined": "^1.0.0",
-    "minimist": "^1.1.1"
+    "shallow-copy": "0.0.1"
   },
   "devDependencies": {
     "tap": "^10.7.3"
