@@ -51,8 +51,9 @@ var sources = [
 ];
 
 test('complicated', function (t) {
-    t.plan(sources.length);
+    t.plan(sources.length * 2);
     sources.forEach(function(src) {
         t.deepEqual(detective(src), [ 'a' ]);
+        t.deepEqual(detective(src, { fullParse: true }), [ 'a' ]);
     });
 });

@@ -8,6 +8,9 @@ test('sparse-array', function (t) {
     t.doesNotThrow(function () {
       detective(src)
     })
+    t.doesNotThrow(function () {
+      detective(src, { fullParse: true })
+    })
     t.end();
 });
 

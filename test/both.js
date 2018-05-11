@@ -11,6 +11,14 @@ test('both', function (t) {
     t.end();
 });
 
+test('both fullParse', function (t) {
+    var modules = detective.find(src, { fullParse: true });
+    t.deepEqual(modules.strings, [ 'a', 'b' ]);
+    t.deepEqual(modules.expressions, [ "'c' + x", "'d' + y" ]);
+    t.notOk(modules.nodes, 'has no nodes');
+    t.end();
+});
+
 test('both with nodes specified in opts', function (t) {
     var modules = detective.find(src, { nodes: true });
     t.deepEqual(modules.strings, [ 'a', 'b' ]);
@@ -19,6 +27,20 @@ test('both with nodes specified in opts', function (t) {
       modules.nodes.map(function (n) { 
         var arg = n.arguments[0];
         return arg.value || arg.left.value; 
+      }),
+      [ 'a', 'b', 'c', 'd' ],
+      'has a node for each require');
+    t.end();
+});
+
+test('both with nodes and fullParse', function (t) {
+    var modules = detective.find(src, { nodes: true, fullParse: true });
+    t.deepEqual(modules.strings, [ 'a', 'b' ]);
+    t.deepEqual(modules.expressions, [ "'c' + x", "'d' + y" ]);
+    t.deepEqual(
+      modules.nodes.map(function (n) {
+        var arg = n.arguments[0];
+        return arg.value || arg.left.value;
       }),
       [ 'a', 'b', 'c', 'd' ],
       'has a node for each require');

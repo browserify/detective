@@ -5,5 +5,6 @@ var src = fs.readFileSync(__dirname + '/files/nested.js');
 
 test('nested', function (t) {
     t.deepEqual(detective(src), [ 'a', 'b', 'c' ]);
+    t.deepEqual(detective(src, { fullParse: true }), [ 'a', 'b', 'c' ]);
     t.end();
 });

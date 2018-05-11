@@ -4,6 +4,7 @@ var fs = require('fs');
 var src = fs.readFileSync(__dirname + '/files/scope.js');
 
 test('scope', function (t) {
-    t.plan(1);
+    t.plan(2);
     t.deepEqual(detective(src), [ './x', './z' ]);
+    t.deepEqual(detective(src, { fullParse: true }), [ './x', './z' ]);
 });

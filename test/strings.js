@@ -5,5 +5,6 @@ var src = fs.readFileSync(__dirname + '/files/strings.js');
 
 test('single', function (t) {
     t.deepEqual(detective(src), [ 'a', 'b', 'c', 'events', 'doom', 'y', 'events2' ]);
+    t.deepEqual(detective(src, { fullParse: true }), [ 'a', 'b', 'c', 'events', 'doom', 'y', 'events2' ]);
     t.end();
 });

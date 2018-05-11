@@ -4,6 +4,7 @@ var fs = require('fs');
 var src = [ 'require("a")\nreturn' ];
 
 test('return', function (t) {
-    t.plan(1);
+    t.plan(2);
     t.deepEqual(detective(src), [ 'a' ]);
+    t.deepEqual(detective(src, { fullParse: true }), [ 'a' ]);
 });

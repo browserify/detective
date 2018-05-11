@@ -9,3 +9,10 @@ test('comment', function (t) {
     t.notOk(modules.nodes, 'has no nodes');
     t.end();
 });
+
+test('comment fullParse', function (t) {
+    var modules = detective.find(src, { fullParse: true });
+    t.deepEqual(modules.strings, [ 'beep' ]);
+    t.notOk(modules.nodes, 'has no nodes');
+    t.end();
+});
