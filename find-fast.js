@@ -1,10 +1,22 @@
-var acorn = require('acorn');
+var acorn = require('acorn-node');
 var defined = require('defined');
 
 var ST_NONE = 0;
 var ST_SAW_NAME = 1;
 var ST_INSIDE_CALL = 2;
 var ST_MEMBER_EXPRESSION = 3;
+var ST_REDEF_PATTERN = 4;
+var ST_REDEFINED = 5;
+
+var REQUIRE_REDEF_PATTERN = [
+    function (token) { return token.type === acorn.tokTypes.braceL; }, // {
+    function (token) { return token.type === acorn.tokTypes.num || token.type === acorn.tokTypes.string; }, // 0
+    function (token) { return token.type === acorn.tokTypes.colon; }, // :
+    function (token) { return token.type === acorn.tokTypes.bracketL; }, // [
+    function (token) { return token.type === acorn.tokTypes._function; }, // function
+    function (token) { return token.type === acorn.tokTypes.parenL; }, // (
+    function (token, opts) { return token.type === acorn.tokTypes.name && token.value === opts.word; }, // require
+];
 
 module.exports = function findFast(src, opts) {
     if (!opts) opts = {};
@@ -14,6 +26,11 @@ module.exports = function findFast(src, opts) {
     var tokenizer = acorn.tokenizer(src, opts.parse);
     var token;
     var state = ST_NONE;
+    // Current index in the require redefinition pattern.
+    var redefIndex = 0;
+    // Block scope depth when require was redefined. This is used to match the
+    // correct } with the opening { after the redefining function parameter list.
+    var redefDepth = 0;
 
     var opener;
     var args = [];
@@ -22,6 +39,31 @@ module.exports = function findFast(src, opts) {
     if (opts.nodes) modules.nodes = [];
 
     while ((token = tokenizer.getToken()) && token.type !== acorn.tokTypes.eof) {
+        if (state === ST_REDEFINED) {
+            if (token.type === acorn.tokTypes.braceL) redefDepth++;
+            if (token.type === acorn.tokTypes.braceR) redefDepth--;
+            if (redefDepth === 0) {
+                state = ST_NONE;
+            }
+            continue;
+        }
+        if (state === ST_REDEF_PATTERN) {
+            if (redefIndex >= REQUIRE_REDEF_PATTERN.length) {
+                // the { after the function() parameter list
+                if (token.type === acorn.tokTypes.braceL) {
+                    state = ST_REDEFINED;
+                    redefDepth = 1;
+                }
+                continue;
+            } else if (REQUIRE_REDEF_PATTERN[redefIndex](token, opts)) {
+                redefIndex++;
+                continue;
+            } else {
+                redefIndex = 0;
+                state = ST_NONE;
+            }
+        }
+
         if (state !== ST_INSIDE_CALL && token.type === acorn.tokTypes.dot) {
             state = ST_MEMBER_EXPRESSION;
         } else if (state === ST_NONE && token.type === acorn.tokTypes.name && mayBeRequire(token)) {
@@ -55,6 +97,9 @@ module.exports = function findFast(src, opts) {
             } else {
                 args.push(token);
             }
+        } else if (REQUIRE_REDEF_PATTERN[0](token)) {
+            state = ST_REDEF_PATTERN;
+            redefIndex = 1;
         } else {
             state = ST_NONE;
         }
