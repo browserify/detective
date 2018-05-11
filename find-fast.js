@@ -1,12 +1,12 @@
 var acorn = require('acorn-node');
 var defined = require('defined');
 
-var ST_NONE = 0;
-var ST_SAW_NAME = 1;
-var ST_INSIDE_CALL = 2;
-var ST_MEMBER_EXPRESSION = 3;
-var ST_REDEF_PATTERN = 4;
-var ST_REDEFINED = 5;
+var ST_NONE = 0; // Default.
+var ST_SAW_NAME = 1; // Saw a `require` identifier.
+var ST_INSIDE_CALL = 2; // Found a `require(` sequence; if followed by a string, that is a dependency.
+var ST_MEMBER_EXPRESSION = 3; // Saw a `.`; if followed by a `require` identifier that should be ignored.
+var ST_REDEF_PATTERN = 4; // Currently in progress detecting a redefinition pattern: `{0:[function(require`
+var ST_REDEFINED = 5; // Currently inside a scope with a redefined `require` identifier.
 
 var REQUIRE_REDEF_PATTERN = [
     function (token) { return token.type === acorn.tokTypes.braceL; }, // {
