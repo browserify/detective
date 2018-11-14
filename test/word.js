@@ -8,5 +8,9 @@ test('word', function (t) {
         detective(src, { word : 'load' }),
         [ 'a', 'b', 'c', 'events', 'doom', 'y', 'events2' ]
     );
+    t.deepEqual(
+        detective(src, { word : 'load', fullParse: true }),
+        [ 'a', 'b', 'c', 'events', 'doom', 'y', 'events2' ]
+    );
     t.end();
 });

@@ -4,6 +4,7 @@ var fs = require('fs');
 var src = fs.readFileSync(__dirname + '/files/shebang.js');
 
 test('shebang', function (t) {
-    t.plan(1);
+    t.plan(2);
     t.deepEqual(detective(src), [ 'a', 'b', 'c' ]);
+    t.deepEqual(detective(src, { fullParse: true }), [ 'a', 'b', 'c' ]);
 });

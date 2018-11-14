@@ -8,5 +8,9 @@ test('set in object pattern', function (t) {
         detective(src, { word : 'load' }),
         [ 'a', 'b', 'c', 'tt' ]
     );
+    t.deepEqual(
+        detective(src, { word : 'load', fullParse: true }),
+        [ 'a', 'b', 'c', 'tt' ]
+    );
     t.end();
 });
