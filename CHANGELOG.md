@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## x.y.z - unreleased
+* update acorn-node to 1.8.2 (make use of acorn 7.x)
+
 ## 5.2.0 - 2019-01-28
 * Use acorn-node's option defaults, adds support for new ES features (https://github.com/browserify/detective/pull/81)
 
