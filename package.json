@@ -1,7 +1,7 @@
 {
   "name": "detective",
   "description": "find all require() calls by walking the AST",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "author": {
     "name": "James Halliday",
     "email": "mail@substack.net",
