@@ -1,4 +1,4 @@
-var test = require('tap').test;
+var test = require('tape');
 var detective = require('../');
 var fs = require('fs');
 var src = fs.readFileSync(__dirname + '/files/chained.js');
