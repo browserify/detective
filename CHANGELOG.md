@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## x.y.z - unreleased
 * update acorn-node to 1.8.2 (make use of acorn 7.x)
+* update acorn-node to 2.0.1 (make use of acorn 7.4.0)
 
 ## 5.2.1 - 2022-05-27
 * Update to "minimist": "^1.2.6" from "^1.1.1" to quiet down dependabot security theater.
